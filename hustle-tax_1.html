@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hustle Tax">
+<meta name="theme-color" content="#e8547a">
+<title>Hustle Tax 💸</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #e8547a;
+    --pink-d: #c43e62;
+    --pink-light: #fde8ee;
+    --pink-mid: #f5b8cc;
+    --teal: #0fa58c;
+    --teal-light: #e0f7f3;
+    --amber: #e07c24;
+    --amber-light: #fdf0e0;
+    --red: #e84444;
+    --red-light: #feecec;
+    --text: #1a1a2e;
+    --text-muted: #6b7080;
+    --text-faint: #adb0bd;
+    --surface: #ffffff;
+    --bg: #f7f5fb;
+    --border: rgba(0,0,0,0.07);
+    --border-strong: rgba(0,0,0,0.13);
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+
+  html { height: 100%; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .status-spacer {
+    height: var(--safe-top);
+    background: var(--pink);
+    flex-shrink: 0;
+  }
+
+  .app-header {
+    background: var(--pink);
+    padding: 14px 20px 16px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .app-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .app-header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.3px;
+  }
+
+  .app-header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 1px;
+  }
+
+  .header-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .hero-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .hero-card {
+    background: rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 11px 14px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .hero-card-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .hero-card-val {
+    font-family: var(--mono);
+    font-size: 17px;
+    font-weight: 500;
+    color: white;
+    line-height: 1;
+  }
+
+  .hero-card.accent {
+    background: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  .app-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 16px 100px;
+  }
+
+  .page.active { display: block; }
+
+  .bottom-nav {
+    flex-shrink: 0;
+    background: var(--surface);
+    border-top: 0.5px solid var(--border-strong);
+    display: flex;
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    gap: 3px;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.1s;
+  }
+
+  .nav-item:active { opacity: 0.6; }
+
+  .nav-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+  }
+
+  .nav-item.active .nav-label { color: var(--pink); }
+
+  .section-head {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--text-muted);
+    margin: 20px 0 8px;
+  }
+
+  .section-head:first-child { margin-top: 4px; }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .card.pink { border-color: var(--pink-mid); background: var(--pink-light); }
+  .card.teal { border-color: #9ee8d8; background: var(--teal-light); }
+  .card.amber { border-color: #f5c99a; background: var(--amber-light); }
+  .card.red { border-color: #f7b5b5; background: var(--red-light); }
+
+  .card-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .card-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .card.pink .card-value { color: var(--pink); }
+  .card.teal .card-value { color: var(--teal); }
+  .card.amber .card-value { color: var(--amber); }
+  .card.red .card-value { color: var(--red); }
+
+  .card-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .grid-2 .card { margin-bottom: 0; }
+
+  .bar-track {
+    height: 9px;
+    border-radius: 100px;
+    background: var(--bg);
+    overflow: hidden;
+    display: flex;
+    margin: 10px 0 8px;
+  }
+
+  .bar-am { background: var(--amber); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .bar-skat { background: var(--pink); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .bar-net { background: var(--teal); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+
+  .bar-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .legend-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-val {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .entry-list {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .entry-item {
+    display: flex;
+    align-items: center;
+    padding: 13px 16px;
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    position: relative;
+  }
+
+  .entry-item:last-child { border-bottom: none; }
+
+  .entry-dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .entry-dot.auto { background: var(--teal-light); }
+  .entry-dot.manual { background: var(--amber-light); }
+
+  .entry-body { flex: 1; min-width: 0; }
+
+  .entry-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .entry-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge {
+    padding: 1px 7px;
+    border-radius: 100px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .badge-auto { background: var(--teal-light); color: var(--teal); }
+  .badge-manual { background: var(--amber-light); color: var(--amber); }
+
+  .entry-amounts {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .entry-net {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--teal);
+  }
+
+  .entry-gross-small {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .entry-delete {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 64px;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transform: translateX(100%);
+    transition: transform 0.2s;
+    font-family: var(--font);
+  }
+
+  .entry-item.swiped .entry-delete { transform: translateX(0); }
+  .entry-item.swiped { padding-right: 64px; }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input[type=text],
+  input[type=number],
+  input[type=date],
+  select {
+    font-family: var(--font);
+    font-size: 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input:focus, select:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(232,84,122,0.12); }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--pink);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.15s, transform 0.1s;
+    letter-spacing: -0.2px;
+    margin-top: 4px;
+  }
+
+  .btn:active { opacity: 0.88; transform: scale(0.98); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--pink);
+    border: 1.5px solid var(--pink);
+  }
+
+  .tax-preview {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .tax-preview.show { display: block; }
+
+  .tax-preview-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .tax-preview-row.total {
+    border-top: 0.5px solid var(--border-strong);
+    margin-top: 4px;
+    padding-top: 8px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tx-mono { font-family: var(--mono); font-size: 13px; }
+
+  .bank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bank-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.1s;
+  }
+
+  .bank-card:active { background: var(--bg); }
+
+  .bank-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .bank-sub { font-size: 12px; color: var(--text-muted); }
+
+  .bank-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .import-btn {
+    padding: 8px 16px;
+    background: var(--pink-light);
+    color: var(--pink);
+    border: 1px solid var(--pink-mid);
+    border-radius: 100px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.1s;
+    white-space: nowrap;
+  }
+
+  .import-btn:active { background: var(--pink); color: white; }
+
+  .info-box {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+
+  .info-box-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+  .info-row span:first-child { color: var(--text-muted); }
+  .info-row span:last-child { font-weight: 500; font-family: var(--mono); font-size: 13px; }
+
+  .toast {
+    position: fixed;
+    bottom: calc(80px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(26,26,46,0.92);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; }
+
+  .month-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 16px;
+  }
+
+  .month-strip::-webkit-scrollbar { display: none; }
+
+  .month-chip {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 0.5px solid var(--border-strong);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: var(--surface);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .month-chip.active {
+    background: var(--pink);
+    color: white;
+    border-color: var(--pink);
+  }
+
+  .install-banner {
+    background: var(--text);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .install-text { font-size: 13px; line-height: 1.4; }
+  .install-text strong { display: block; font-size: 14px; }
+
+  .install-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="status-spacer"></div>
+
+<div class="install-banner" id="installBanner">
+  <div class="install-text">
+    <strong>Add to Home Screen</strong>
+    Tap Share → "Add to Home Screen" to use as an app
+  </div>
+  <button class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</button>
+</div>
+
+<div class="app-header">
+  <div class="app-header-row">
+    <div>
+      <h1>Hustle Tax 💸</h1>
+      <div class="app-header-sub">Your side hustle tracker</div>
+    </div>
+    <div class="header-icon">👩‍💼</div>
+  </div>
+  <div class="hero-cards" id="heroCards"></div>
+</div>
+
+<div class="app-body">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="month-strip" id="monthStrip"></div>
+
+    <div class="section-head">Tax breakdown</div>
+    <div class="grid-2">
+      <div class="card amber">
+        <div class="card-label">AM tax (8%)</div>
+        <div class="card-value" id="h-am">0 kr</div>
+        <div class="card-sub">Deducted first</div>
+      </div>
+      <div class="card pink">
+        <div class="card-label">Income tax (39%)</div>
+        <div class="card-value" id="h-skat">0 kr</div>
+        <div class="card-sub">Of amount after AM</div>
+      </div>
+    </div>
+
+    <div class="card red" style="margin-bottom:10px;">
+      <div class="card-row">
+        <div>
+          <div class="card-label">Set aside now</div>
+          <div class="card-value" id="h-aside">0 kr</div>
+          <div class="card-sub">AM tax + income tax combined</div>
+        </div>
+        <div style="font-size:36px;">🏦</div>
+      </div>
+    </div>
+
+    <div class="card teal" style="margin-bottom:10px;">
+      <div class="card-row">
+        <div>
+          <div class="card-label">You keep</div>
+          <div class="card-value" id="h-net">0 kr</div>
+          <div class="card-sub">After all taxes</div>
+        </div>
+        <div style="font-size:36px;">✨</div>
+      </div>
+    </div>
+
+    <div class="section-head">Breakdown</div>
+    <div class="card">
+      <div class="bar-track">
+        <div class="bar-am" id="bar-am" style="width:0%"></div>
+        <div class="bar-skat" id="bar-skat" style="width:0%"></div>
+        <div class="bar-net" id="bar-net" style="width:0%"></div>
+      </div>
+      <div class="bar-legend">
+        <div class="legend-item">
+          <div class="legend-left"><div class="legend-dot" style="background:var(--amber)"></div>AM tax 8%</div>
+          <div class="legend-val" id="leg-am">0 kr</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left"><div class="legend-dot" style="background:var(--pink)"></div>Income tax 39%</div>
+          <div class="legend-val" id="leg-skat">0 kr</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left"><div class="legend-dot" style="background:var(--teal)"></div>Yours to keep</div>
+          <div class="legend-val" id="leg-net">0 kr</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">Recent entries</div>
+    <div id="recentList"></div>
+  </div>
+
+  <!-- ENTRIES -->
+  <div class="page" id="page-entries">
+    <div class="month-strip" id="monthStrip2"></div>
+    <div id="entriesList"></div>
+  </div>
+
+  <!-- ADD -->
+  <div class="page" id="page-add">
+    <div class="section-head">New entry</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" id="inp-desc" placeholder="e.g. Haircut – private client" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount (kr)</label>
+        <input type="number" id="inp-amt" placeholder="500" min="1" step="1" inputmode="decimal">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" id="inp-date">
+      </div>
+
+      <div class="tax-preview" id="taxPreview">
+        <div class="tax-preview-row">
+          <span>Gross income</span>
+          <span class="tx-mono" id="prev-gross">–</span>
+        </div>
+        <div class="tax-preview-row">
+          <span>− AM tax (8%)</span>
+          <span class="tx-mono" style="color:var(--amber)" id="prev-am">–</span>
+        </div>
+        <div class="tax-preview-row">
+          <span>− Income tax (39%)</span>
+          <span class="tx-mono" style="color:var(--pink)" id="prev-skat">–</span>
+        </div>
+        <div class="tax-preview-row total">
+          <span>You keep</span>
+          <span class="tx-mono" style="color:var(--teal)" id="prev-net">–</span>
+        </div>
+        <div class="tax-preview-row" style="padding-top:4px;">
+          <span style="color:var(--red);font-weight:600;">Set aside</span>
+          <span class="tx-mono" style="color:var(--red);font-weight:600;" id="prev-aside">–</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="addEntry()" style="margin-top:16px;">Add entry</button>
+    </div>
+
+    <div class="section-head" style="margin-top:8px;">Tax info</div>
+    <div class="info-box">
+      <div class="info-box-title">🇩🇰 Danish tax rules (side hustle)</div>
+      <div class="info-row"><span>AM tax (labour market)</span><span>8% of gross</span></div>
+      <div class="info-row"><span>Taxable base</span><span>Gross − AM tax</span></div>
+      <div class="info-row"><span>Income tax</span><span>39% of base</span></div>
+      <div class="info-row"><span>Effective tax rate</span><span>~43.9%</span></div>
+      <div class="info-row"><span>You keep</span><span>~56.1%</span></div>
+    </div>
+  </div>
+
+  <!-- BANK IMPORT -->
+  <div class="page" id="page-import">
+    <div class="section-head">Choose your bank</div>
+    <div class="bank-list">
+      <div class="bank-card">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="bank-logo" style="background:#5a5dc9;color:white;">📱</div>
+          <div>
+            <div class="bank-name">MobilePay</div>
+            <div class="bank-sub">Import payments automatically</div>
+          </div>
+        </div>
+        <button class="import-btn" onclick="importBank('MobilePay')">Import</button>
+      </div>
+      <div class="bank-card">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="bank-logo" style="background:#0000a0;color:white;">🏦</div>
+          <div>
+            <div class="bank-name">Nordea</div>
+            <div class="bank-sub">Import bank transactions</div>
+          </div>
+        </div>
+        <button class="import-btn" onclick="importBank('Nordea')">Import</button>
+      </div>
+      <div class="bank-card">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="bank-logo" style="background:#003755;color:white;">🏛</div>
+          <div>
+            <div class="bank-name">Danske Bank</div>
+            <div class="bank-sub">Import bank transactions</div>
+          </div>
+        </div>
+        <button class="import-btn" onclick="importBank('Danske Bank')">Import</button>
+      </div>
+      <div class="bank-card">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="bank-logo" style="background:#191c1f;color:white;">💳</div>
+          <div>
+            <div class="bank-name">Revolut</div>
+            <div class="bank-sub">Import card payments</div>
+          </div>
+        </div>
+        <button class="import-btn" onclick="importBank('Revolut')">Import</button>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:20px;">Upload CSV</div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:500;margin-bottom:6px;">Upload from your bank</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+        Download your bank statement as CSV and upload it here.
+        Expected columns: date, description, amount
+      </div>
+      <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCSV(this)">
+      <button class="btn btn-outline" onclick="document.getElementById('csvFile').click()">Choose CSV file</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom nav -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="nav('home')" id="nav-home">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Home</div>
+  </button>
+  <button class="nav-item" onclick="nav('entries')" id="nav-entries">
+    <div class="nav-icon">📋</div>
+    <div class="nav-label">Entries</div>
+  </button>
+  <button class="nav-item" onclick="nav('add')" id="nav-add">
+    <div class="nav-icon" style="font-size:28px;line-height:1;margin-bottom:-2px;">⊕</div>
+    <div class="nav-label">Add</div>
+  </button>
+  <button class="nav-item" onclick="nav('import')" id="nav-import">
+    <div class="nav-icon">🏦</div>
+    <div class="nav-label">Bank</div>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const AM = 0.08, SKAT = 0.39;
+
+function calcTax(gross) {
+  const am = gross * AM;
+  const base = gross - am;
+  const skat = base * SKAT;
+  const net = base - skat;
+  return { am, skat, net, aside: am + skat, base };
+}
+
+function kr(n) {
+  return Math.round(n).toLocaleString('da-DK') + ' kr';
+}
+
+let entries = JSON.parse(localStorage.getItem('hustle_en_v1') || 'null');
+if (!entries) {
+  entries = [
+    { id: 1, desc: "Haircut – private client", date: "2025-05-01", amount: 500, source: "manual" },
+    { id: 2, desc: "Colour & cut – Laura", date: "2025-04-27", amount: 850, source: "manual" },
+    { id: 3, desc: "Payment from Nanna", date: "2025-04-20", amount: 1200, source: "auto" },
+    { id: 4, desc: "Haircut – Sofie", date: "2025-04-15", amount: 400, source: "manual" },
+    { id: 5, desc: "Colour & cut – Julie", date: "2025-03-28", amount: 1100, source: "manual" },
+    { id: 6, desc: "Payment from Mads T.", date: "2025-03-15", amount: 700, source: "auto" },
+  ];
+  save();
+}
+
+const BANK_DATA = {
+  MobilePay: [
+    { desc: "Payment from Sofie H.", amount: 850, date: todayOffset(-2) },
+    { desc: "Payment from Mads T.", amount: 1200, date: todayOffset(-8) },
+    { desc: "Private transfer – Emma", amount: 600, date: todayOffset(-15) },
+  ],
+  Nordea: [
+    { desc: "Side hustle – Nordea #1", amount: 2500, date: todayOffset(-3) },
+    { desc: "Private work payment", amount: 1750, date: todayOffset(-12) },
+  ],
+  "Danske Bank": [
+    { desc: "Transfer from private client", amount: 1300, date: todayOffset(-1) },
+    { desc: "Haircut – private", amount: 550, date: todayOffset(-20) },
+  ],
+  Revolut: [
+    { desc: "Freelance payment", amount: 3200, date: todayOffset(-5) },
+    { desc: "Private haircut", amount: 400, date: todayOffset(-18) },
+  ],
+};
+
+function todayOffset(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+let activeMonth = 'all';
+
+function getMonths() {
+  const months = new Set(entries.map(e => e.date.slice(0, 7)));
+  return ['all', ...Array.from(months).sort().reverse()];
+}
+
+function monthLabel(m) {
+  if (m === 'all') return 'All';
+  const [y, mo] = m.split('-');
+  const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return names[parseInt(mo) - 1] + ' ' + y.slice(2);
+}
+
+function filteredEntries() {
+  if (activeMonth === 'all') return entries;
+  return entries.filter(e => e.date.startsWith(activeMonth));
+}
+
+function save() {
+  localStorage.setItem('hustle_en_v1', JSON.stringify(entries));
+}
+
+let currentPage = 'home';
+
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  currentPage = page;
+  renderPage(page);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function renderAll() {
+  updateHero();
+  renderPage(currentPage);
+}
+
+function updateHero() {
+  const fe = filteredEntries();
+  const total = fe.reduce((s, e) => s + e.amount, 0);
+  const t = calcTax(total);
+  document.getElementById('heroCards').innerHTML = `
+    <div class="hero-card">
+      <div class="hero-card-label">Gross income</div>
+      <div class="hero-card-val">${kr(total)}</div>
+    </div>
+    <div class="hero-card accent">
+      <div class="hero-card-label">Set aside</div>
+      <div class="hero-card-val">${kr(t.aside)}</div>
+    </div>
+  `;
+}
+
+function renderMonthStrip(containerId) {
+  const months = getMonths();
+  document.getElementById(containerId).innerHTML = months.map(m =>
+    `<div class="month-chip ${m === activeMonth ? 'active' : ''}" onclick="setMonth('${m}')">${monthLabel(m)}</div>`
+  ).join('');
+}
+
+function setMonth(m) {
+  activeMonth = m;
+  renderAll();
+}
+
+function renderPage(page) {
+  if (page === 'home') renderHome();
+  if (page === 'entries') renderEntries();
+  if (page === 'add') renderAdd();
+}
+
+function renderHome() {
+  renderMonthStrip('monthStrip');
+  const fe = filteredEntries();
+  const total = fe.reduce((s, e) => s + e.amount, 0);
+  const t = calcTax(total);
+  const pct = v => total ? (v / total * 100).toFixed(1) : 0;
+
+  document.getElementById('h-am').textContent = kr(t.am);
+  document.getElementById('h-skat').textContent = kr(t.skat);
+  document.getElementById('h-aside').textContent = kr(t.aside);
+  document.getElementById('h-net').textContent = kr(t.net);
+
+  document.getElementById('bar-am').style.width = pct(t.am) + '%';
+  document.getElementById('bar-skat').style.width = pct(t.skat) + '%';
+  document.getElementById('bar-net').style.width = pct(t.net) + '%';
+
+  document.getElementById('leg-am').textContent = kr(t.am);
+  document.getElementById('leg-skat').textContent = kr(t.skat);
+  document.getElementById('leg-net').textContent = kr(t.net);
+
+  const recent = fe.slice(0, 5);
+  const el = document.getElementById('recentList');
+  if (!recent.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">💭</div><div class="empty-title">No entries yet</div><div class="empty-sub">Add your first entry or import from your bank</div></div>`;
+  } else {
+    el.innerHTML = `<div class="entry-list">${recent.map(entryHTML).join('')}</div>`;
+  }
+}
+
+function renderEntries() {
+  renderMonthStrip('monthStrip2');
+  const fe = filteredEntries();
+  const el = document.getElementById('entriesList');
+  if (!fe.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No entries</div><div class="empty-sub">Use "Add" or import from your bank</div></div>`;
+  } else {
+    el.innerHTML = `<div class="entry-list">${fe.map(entryHTML).join('')}</div>`;
+  }
+}
+
+function entryHTML(e) {
+  const t = calcTax(e.amount);
+  const icon = e.source === 'auto' ? '🏦' : '✏️';
+  return `
+    <div class="entry-item" id="ei-${e.id}" ontouchstart="swipeStart(event,'${e.id}')" ontouchend="swipeEnd(event,'${e.id}')">
+      <div class="entry-dot ${e.source}"><span style="font-size:16px">${icon}</span></div>
+      <div class="entry-body">
+        <div class="entry-desc">${e.desc}</div>
+        <div class="entry-meta">
+          <span>${formatDate(e.date)}</span>
+          <span class="badge ${e.source === 'auto' ? 'badge-auto' : 'badge-manual'}">${e.source === 'auto' ? 'Bank' : 'Manual'}</span>
+        </div>
+      </div>
+      <div class="entry-amounts">
+        <div class="entry-net">${kr(t.net)}</div>
+        <div class="entry-gross-small">${kr(e.amount)} gross</div>
+      </div>
+      <button class="entry-delete" onclick="deleteEntry('${e.id}')">🗑</button>
+    </div>
+  `;
+}
+
+function formatDate(d) {
+  const [y, m, day] = d.split('-');
+  return `${parseInt(day)}/${parseInt(m)}/${y.slice(2)}`;
+}
+
+function renderAdd() {
+  const d = document.getElementById('inp-date');
+  if (!d.value) d.value = new Date().toISOString().split('T')[0];
+}
+
+function addEntry() {
+  const desc = document.getElementById('inp-desc').value.trim();
+  const amt = parseFloat(document.getElementById('inp-amt').value);
+  const date = document.getElementById('inp-date').value;
+  if (!desc) { toast('Please enter a description'); document.getElementById('inp-desc').focus(); return; }
+  if (!amt || amt <= 0) { toast('Please enter a valid amount'); document.getElementById('inp-amt').focus(); return; }
+  if (!date) { toast('Please pick a date'); return; }
+  entries.unshift({ id: Date.now(), desc, date, amount: amt, source: 'manual' });
+  save();
+  document.getElementById('inp-desc').value = '';
+  document.getElementById('inp-amt').value = '';
+  document.getElementById('taxPreview').classList.remove('show');
+  toast('Entry added! ✓');
+  nav('home');
+}
+
+document.getElementById('inp-amt').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  const box = document.getElementById('taxPreview');
+  if (!v || v <= 0) { box.classList.remove('show'); return; }
+  const t = calcTax(v);
+  box.classList.add('show');
+  document.getElementById('prev-gross').textContent = kr(v);
+  document.getElementById('prev-am').textContent = '−' + kr(t.am);
+  document.getElementById('prev-skat').textContent = '−' + kr(t.skat);
+  document.getElementById('prev-net').textContent = kr(t.net);
+  document.getElementById('prev-aside').textContent = kr(t.aside);
+});
+
+let swipeStartX = 0;
+
+function swipeStart(e, id) {
+  swipeStartX = e.touches[0].clientX;
+}
+
+function swipeEnd(e, id) {
+  const dx = swipeStartX - e.changedTouches[0].clientX;
+  const el = document.getElementById('ei-' + id);
+  if (dx > 60) {
+    document.querySelectorAll('.entry-item.swiped').forEach(x => { if (x.id !== 'ei-'+id) x.classList.remove('swiped'); });
+    el.classList.add('swiped');
+  } else if (dx < -20) {
+    el.classList.remove('swiped');
+  }
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e => String(e.id) !== String(id));
+  save();
+  toast('Entry deleted');
+  renderAll();
+}
+
+function importBank(bank) {
+  const data = BANK_DATA[bank] || [];
+  let added = 0;
+  data.forEach(item => {
+    const key = item.desc + item.date;
+    if (!entries.find(e => e.desc + e.date === key)) {
+      entries.unshift({ id: Date.now() + Math.random(), desc: item.desc, date: item.date, amount: item.amount, source: 'auto' });
+      added++;
+    }
+  });
+  save();
+  toast(added ? `${added} entries imported from ${bank} ✓` : `All entries from ${bank} already added`);
+  nav('home');
+}
+
+function handleCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const lines = e.target.result.split('\n').filter(l => l.trim());
+    let added = 0;
+    lines.slice(1).forEach(line => {
+      const parts = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+      if (parts.length >= 3) {
+        const date = parts[0], desc = parts[1], amt = parseFloat(parts[2]);
+        if (date && desc && amt > 0) {
+          entries.unshift({ id: Date.now() + Math.random(), desc, date, amount: amt, source: 'auto' });
+          added++;
+        }
+      }
+    });
+    save();
+    toast(added ? `${added} entries imported from CSV ✓` : 'No valid entries found in CSV');
+    nav('home');
+  };
+  reader.readAsText(file);
+}
+
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  document.getElementById('installBanner').style.display = 'none';
+}
+
+renderAll();
+</script>
+</body>
+</html>
